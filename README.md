@@ -1,59 +1,85 @@
-# 
+![img](./)
+# @grandgular/rx
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.0.
+[//]: # ([![npm version]&#40;https://img.shields.io/npm/v/@grandgular/link&#41;]&#40;https://www.npmjs.com/package/@grandgular/link&#41;)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Development server
+@grandgular/rx extends RxJS with Angular-optimized operators, starting with distinctUntilChangedWithMemory - a configurable duplicate-filtering operator that maintains a sliding window of past values for advanced comparison logic.
 
-To start a local development server, run:
+[//]: # (## Features)
 
-```bash
-ng serve
-```
+[//]: # (- 🧠 Stateful Operators – Like distinctUntilChangedWithMemory for smarter deduplication with configurable history)
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+[//]: # (- ⚡ Angular-First – Designed to work seamlessly with Angular's change detection and lifecycle)
 
-## Code scaffolding
+[//]: # (- 🏎️ Performance-Optimized – Minimal overhead, maximum efficiency for high-frequency streams)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+[//]: # (- 🛠️ Type-Safe – Full TypeScript support with strict interfaces)
 
-```bash
-ng generate component component-name
-```
+[//]: # (- 🔄 Reactive Patterns – Simplify common RxJS challenges in Angular apps)
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+[//]: # (- 📦 Lightweight – Tiny bundle size with zero unnecessary dependencies)
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## Installation
 
 ```bash
-ng build
+npm install @grandgular/rx
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
 
-## Running unit tests
+## Operators
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### distinctUntilChangedWithMemory()
+An enhanced version of RxJS's distinctUntilChanged() that maintains a memory of previous values, allowing for more sophisticated duplicate detection.
 
-```bash
-ng test
+#### Key Features:
+- Configurable memory size - Remember last N values (default: Infinity)
+- Custom comparison - Define your own duplicate detection logic
+- Angular-optimized - Works seamlessly with Angular's change detection
+- Type-safe - Full TypeScript support
+
+#### Usage Examples:
+##### 1. Infinite Memory
+```typescript
+const nums$ = of(1, 2, 3, 4, 1, 2, 5);
+
+nums$.pipe(
+distinctUntilChangedWithMemory() // Defaults to Infinity
+).subscribe(console.log);
+
+// Output: 1, 2, 3, 4, 5
 ```
 
-## Running end-to-end tests
+##### 2. Basic Deduplication (Remember last 3 values)
+```typescript
+const source$ = of(1, 2, 3, 1, 2, 3, 4, 3, 5);
 
-For end-to-end (e2e) testing, run:
+source$.pipe(
+  distinctUntilChangedWithMemory(3) // Remember last 3 values
+).subscribe(console.log);
 
-```bash
-ng e2e
+// Output: 1, 2, 3, 4, 5
+// Explanation: The second '1' and '2' are filtered because they're in the memory
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+##### 3. Case-Insensitive String Comparison
+```typescript
+const words$ = of('Apple', 'Banana', 'apple', 'orange', 'Apple');
 
-## Additional Resources
+words$.pipe(
+  distinctUntilChangedWithMemory({
+    memorySize: 4,
+    comparator: (prev, curr) =>
+      prev.some(word => word.toLowerCase() === curr.toLowerCase())
+  })
+).subscribe(console.log);
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+// Output: 'Apple', 'Banana', 'orange'
+```
+
+---
+
+## License
+
+MIT © [Grandgular](https://github.com/grandgular)
