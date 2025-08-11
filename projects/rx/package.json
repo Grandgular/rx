@@ -8,5 +8,21 @@
   "dependencies": {
     "tslib": "^2.3.0"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "description": "Enhanced RxJS operators for Angular applications",
+  "author": "Grandgular <https://t.me/grandgular>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grandgular/rx.git"
+  },
+  "homepage": "https://github.com/grandgular/rx#readme",
+  "keywords": [
+    "angular",
+    "rxjs",
+    "operators",
+    "reactive",
+    "state management",
+    "distinctUntilChangedWithMemory"
+  ]
 }
