@@ -5,6 +5,28 @@ interface DistinctUntilChangedWithMemoryConfig<T> {
   comparator?: (prev: T[], current: T) => boolean;
 }
 
+/**
+ * Creates an operator that filters consecutive duplicate values from an Observable,
+ * with configurable memory of previous values.
+ *
+ * ### Features
+ * - Configurable memory size (last N values)
+ * - Custom comparison function
+ * - Type-safe implementation
+ *
+ * @example
+ * // Basic usage (remember last 3 values)
+ * observable.pipe(distinctUntilChangedWithMemory(3))
+ *
+ * @example
+ * // With custom comparator
+ * observable.pipe(distinctUntilChangedWithMemory({
+ *   memorySize: 5,
+ *   comparator: (prev, curr) => prev.some(item => item.id === curr.id)
+ * }))
+ *
+ * @template T Type of stream values
+ */
 export function distinctUntilChangedWithMemory<T>(
   config: DistinctUntilChangedWithMemoryConfig<T>,
 ): MonoTypeOperatorFunction<T>;
