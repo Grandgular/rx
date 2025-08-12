@@ -101,6 +101,83 @@ words$
 
 ---
 
+### redirectOnHttpError()
+
+An RxJS operator that handles HTTP errors by redirecting to specified routes based on error status codes, while maintaining the original error for downstream processing.
+
+#### Key Features:
+
+- Status-based routing - Map specific HTTP status codes to different routes
+- Flexible configuration - Accepts either a route map or a single fallback route
+- History control - Option to skip location change in browser history
+- Error logging - Optional callback for error logging
+- Type-safe - Full TypeScript support with HttpStatusCode enum
+
+#### Usage Examples:
+
+##### 1. Basic Usage with Fallback Route
+
+```typescript
+import { redirectOnHttpError } from "./path/to/operator";
+
+this.http
+  .get("/api")
+  .pipe(
+    redirectOnHttpError(this.router, {
+      redirectConfig: "/error", // Single fallback route
+    }),
+  )
+  .subscribe({
+    next: (data) => handleData(data),
+    error: (err) => console.error("Original error preserved:", err),
+  });
+```
+
+##### 2. Status-Specific Routing
+
+```typescript
+this.http
+  .get("/api")
+  .pipe(
+    redirectOnHttpError(this.router, {
+      redirectConfig: {
+        [HttpStatusCode.NotFound]: "/not-found",
+        [HttpStatusCode.Forbidden]: "/access-denied",
+        default: "/server-error",
+      },
+      skipLocationChange: true, // Won't add to browser history
+    }),
+  )
+  .subscribe();
+```
+
+##### 3. With Error Logging
+
+```typescript
+this.http
+  .post("/api", payload)
+  .pipe(
+    redirectOnHttpError(this.router, {
+      redirectConfig: {
+        [HttpStatusCode.BadRequest]: "/invalid-request",
+        default: "/error",
+      },
+      logError: (error) => this.errorService.log(error), // Custom logging
+    }),
+  )
+  .subscribe();
+```
+
+### Configuration Options:
+
+| Option               | Type                                  | Description                                                                                |
+| -------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `redirectConfig`     | `string OR ErrorRoutesTypes`          | Either a single fallback route or a map of status codes to routes (must include 'default') |
+| `skipLocationChange` | `boolean` (optional)                  | If true, navigation won't push a new state into browser history (default: false)           |
+| `logError`           | `(error: unknown) => void` (optional) | Callback for custom error logging                                                          |
+
+---
+
 ## License
 
 MIT © [Grandgular](https://github.com/grandgular)
